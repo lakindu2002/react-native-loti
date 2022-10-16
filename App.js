@@ -6,8 +6,7 @@
  * @flow strict-local
  */
 
-import React from 'react';
-import type {Node} from 'react';
+import React, {useRef} from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -16,101 +15,70 @@ import {
   Text,
   useColorScheme,
   View,
+  Image,
+  TouchableOpacity,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import {Colors, Header} from 'react-native/Libraries/NewAppScreen';
+import Lottie from 'lottie-react-native';
 
 /* $FlowFixMe[missing-local-annot] The type annotation(s) required by Flow's
  * LTI update could not be added via codemod */
-const Section = ({children, title}): Node => {
+const App = () => {
   const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
-
-const App: () => Node = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+  const animationRef = useRef<Lottie>(null);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.js</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+    <SafeAreaView style={(backgroundStyle, {height: '100%'})}>
+      <View style={styles.card}>
+        <View>
+          <Image source={require('./pic.jpeg')} style={styles.cardImage} />
         </View>
-      </ScrollView>
+        <View style={styles.cardActions}>
+          <TouchableOpacity
+            onPress={() => {
+              animationRef.current.play();
+            }}>
+            <View
+              style={{display: 'flex', flexDirection: 'column', height: 50}}>
+              <Lottie
+                ref={animationRef}
+                loop={false}
+                source={require('./animation.json')}
+              />
+              <Text>Click To Like</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <Text>This is a nice duck, why don't you like it</Text>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+    margin: 20,
+    shadowColor: '#000',
+    flexDirection: 'column',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  cardImage: {
+    width: '100%',
+    height: 400,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  cardActions: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    maxHeight: 50,
   },
 });
 
